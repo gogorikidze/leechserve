@@ -1,0 +1,23 @@
+<html>
+<body>
+<input id="open" name="open" type="file" accept=".html">
+<script src="leechserv.js"></script>
+<script>
+let open = document.getElementById('open');
+open.addEventListener('change', function(){
+	let file = open.files[0];
+	if(file){
+		let reader = new FileReader();
+	  reader.readAsText(file, "UTF-8");
+		reader.onload = function (evt) {
+      encodeImage(evt.target.result);
+      decodeImage();
+    }
+    reader.onerror = function (evt) {
+      console.log("error reading file");
+    }
+	}
+});
+</script>
+</body>
+</html>
