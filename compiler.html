@@ -1,7 +1,7 @@
 <html>
 <body>
 <input id="open" name="open" type="file" accept=".html">
-<script src="leechserv.js"></script>
+<script src="leechserve.js"></script>
 <script>
 let open = document.getElementById('open');
 open.addEventListener('change', function(){
@@ -11,7 +11,8 @@ open.addEventListener('change', function(){
 	  reader.readAsText(file, "UTF-8");
 		reader.onload = function (evt) {
       encodeImage(evt.target.result);
-      decodeImage();
+			//body.innerHTML = decodeImage1();
+      console.log(decodeImage());
     }
     reader.onerror = function (evt) {
       console.log("error reading file");
