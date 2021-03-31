@@ -1,24 +1,33 @@
 <html>
 <body>
-<input id="open" name="open" type="file" accept=".html">
+<p><input id="open" name="open" type="file" accept=".html"></p>
+<p><button id="download">dowload result</button></p>
 <script src="leechserve.js"></script>
 <script>
+let leech = new Leech({visible: true});
 let open = document.getElementById('open');
+let download = document.getElementById('download');
 open.addEventListener('change', function(){
 	let file = open.files[0];
 	if(file){
 		let reader = new FileReader();
 	  reader.readAsText(file, "UTF-8");
 		reader.onload = function (evt) {
-      encodeImage(evt.target.result);
-			//body.innerHTML = decodeImage1();
-      console.log(decodeImage());
+      leech.encodeImage(evt.target.result);
+			//leech.body.innerHTML = leech.decodeImage();
+      console.log(leech.decodeImage());
     }
     reader.onerror = function (evt) {
       console.log("error reading file");
     }
 	}
 });
+download.addEventListener('click', function(){
+	leech.saveAsImage(getFile(open.value));
+});
+function getFile(filePath) {
+	return filePath.substr(filePath.lastIndexOf('\\') + 1).split('.')[0];
+}
 </script>
 </body>
 </html>
