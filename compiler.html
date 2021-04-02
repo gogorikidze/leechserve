@@ -14,8 +14,8 @@ open.addEventListener('change', function(){
 	  reader.readAsText(file, "UTF-8");
 		reader.onload = function (evt) {
       leech.encodeImage(evt.target.result);
-			//leech.body.innerHTML = leech.decodeImage();
-      console.log(leech.decodeImage());
+			leech.body.innerHTML = leech.decodeImage();
+      //console.log(leech.decodeImage());
     }
     reader.onerror = function (evt) {
       console.log("error reading file");

@@ -4,7 +4,7 @@ class Leech{
     this.test();
     this.body = document.getElementsByTagName("body")[0];
 
-    if(args.canvasID){ //if canvas id is not specified, create one and append to document body
+    if(args != undefined && args.canvasID){ //if canvas id is not specified, create one and append to document body
       this.canvas = document.getElementById(canvasID);
     }else{
       //creates this.canvas
@@ -15,7 +15,7 @@ class Leech{
       this.body.appendChild(this.canvas);
     }
 
-    if(args.visible == false){
+    if(args != undefined && args.visible == false){
       this.canvas.style = "display:none";
     }
     this.ctx = this.canvas.getContext('2d');
@@ -34,7 +34,8 @@ class Leech{
     return output;
   };
   encodeImage(input){ //takes normal text input:String, converts to binary and displays as an image
-    var bin = this.encode(input);
+    console.time("encodingSpeed");
+    let bin = this.encode(input);
     let pointer = 0;
 
     //a*a image looks nicer but wastes some pixels, length*1 image wastes no space but most hosts wont take it
@@ -45,25 +46,25 @@ class Leech{
 
     let data = this.ctx.getImageData(0,0, this.canvas.width, this.canvas.height);
     for (let i = 0; i < data.data.length; i += 4) {
-      data.data[i] = this.numfromChars(bin[pointer], bin[pointer+1], bin[pointer+2]); pointer+=3;
-      data.data[i + 1] = this.numfromChars(bin[pointer], bin[pointer+1], bin[pointer+2]); pointer+=3;
-      data.data[i + 2] = this.numfromChars(bin[pointer], bin[pointer+1], bin[pointer+2]); pointer+=3;
+      data.data[i] = this.numfromChars(bin[pointer], bin[pointer+1], bin[pointer+2]);
+      data.data[i + 1] = this.numfromChars(bin[pointer+3], bin[pointer+4], bin[pointer+5]);
+      data.data[i + 2] = this.numfromChars(bin[pointer+6], bin[pointer+7], bin[pointer+8]);
       data.data[i + 3] = 255; //https://stackoverflow.com/a/22389411
+      pointer+=9; // instead of adding 3 three times I add 9 once
     }
     this.ctx.putImageData(data,0,0);
+    console.timeEnd("encodingSpeed");
   }
   decodeImage(){//converts image on canvas to normal text, returns String
+    console.time("decodingSpeed");
     let data = this.ctx.getImageData(0,0, this.canvas.width, this.canvas.height);
     let bin = "";
     for (let i = 0; i < data.data.length; i += 4) {
-      for(let j = 0; j < 3; j++){
-        let array = this.charsfromNum(data.data[i+j]);
-        bin += array[0];
-        bin += array[1];
-        bin += array[2];
-      }
+      bin += this.charsfromNum(data.data[i]);
+      bin += this.charsfromNum(data.data[i+1]);
+      bin += this.charsfromNum(data.data[i+2]);
     }
-    return this.decode(bin);
+    console.timeEnd("decodingSpeed"); return this.decode(bin);
   }
   numfromChars(char1,char2,char3){//takes 3 chars and produces number<255. ("1", "0", " ") => 102
     return this.numfromChar(char1)*100 + this.numfromChar(char2)*10 + this.numfromChar(char3);
@@ -72,7 +73,7 @@ class Leech{
     let hundreds = this.getDigit(num, 3);
     let tens = this.getDigit(num, 2);
     let ones = this.getDigit(num, 1);
-    return [this.charfromNum(hundreds), this.charfromNum(tens), this.charfromNum(ones)];
+    return ""+this.charfromNum(hundreds)+this.charfromNum(tens)+this.charfromNum(ones);
   }
   numfromChar(char){//reverse of charsfromNum. takes char:String and outputs corresponding number:Int
     switch(char){
@@ -93,16 +94,17 @@ class Leech{
     return Math.floor((number / Math.pow(10, n - 1)) % 10);
   }
   loadFromUrl(url){//loads and decodes image from remote source
-    var img = new Image();
+    let parent = this;
+    let img = new Image();
     img.crossOrigin = "Anonymous";
     img.src = url;
     img.onload = function() {
-      this.canvas.width = img.width;
-      this.canvas.height = img.height;
+      parent.canvas.width = this.width;
+      parent.canvas.height = this.width;
 
-      this.ctx.drawImage(img, 0, 0);
-      let html = this.decodeImage();
-      this.body.innerHTML = html;
+      parent.ctx.drawImage(img, 0, 0);
+      let html = parent.decodeImage();
+      parent.body.innerHTML = html;
     }
   }
   saveAsImage(filename){//saves the encoded image
