@@ -4,7 +4,7 @@
 <p><button id="download">dowload result</button></p>
 <script src="leechserve.js"></script>
 <script>
-let leech = new Leech({visible: true});
+let leech = new Leech({visible: true, threads: 0});
 let open = document.getElementById('open');
 let download = document.getElementById('download');
 open.addEventListener('change', function(){
@@ -14,7 +14,9 @@ open.addEventListener('change', function(){
 	  reader.readAsText(file, "UTF-8");
 		reader.onload = function (evt) {
       leech.encodeImage(evt.target.result);
-			leech.body.innerHTML = leech.decodeImage();
+			leech.decodeImage(function(e){
+				leech.body.innerHTML = e;
+			});
       //console.log(leech.decodeImage());
     }
     reader.onerror = function (evt) {
