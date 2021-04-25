@@ -15,7 +15,7 @@ open.addEventListener('change', function(){
 		reader.onload = function (evt) {
       leech.encodeImage(evt.target.result);
 			leech.decodeImage(function(e){
-				leech.body.innerHTML = e;
+				//leech.body.innerHTML = e;
 			});
       //console.log(leech.decodeImage());
     }
