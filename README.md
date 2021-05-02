@@ -1,9 +1,10 @@
 # LeechServe.js
 This library lets you use flickr or any other image hosting service to serve static pages.<br/> Max filesize flickr allows is 200MB per image, most computers will crash at 15.
 
-Demo:<br/>
-[copy of Dexter's Wiki page (Flickr used for serving the image)](https://gogorikidze.github.io/leechserve/examples/Dexter?serveFrom=flickr)<br/>
-[copy of Dexter's Wiki page (imgBB used for serving the image)](https://gogorikidze.github.io/leechserve/examples/Dexter?serveFrom=imgBB)
+Demos:<br/>
+(400KB | img:600KB)[copy of Dexter's Wiki page (Flickr used for serving the image)](https://gogorikidze.github.io/leechserve/examples/Dexter?serveFrom=flickr)<br/>
+(400KB | img:600KB)[copy of Dexter's Wiki page (imgBB used for serving the image)](https://gogorikidze.github.io/leechserve/examples/Dexter?serveFrom=imgBB)<br/>
+
 
 # How to use it
 1: Convert your page to a single file with this tool:<br/>

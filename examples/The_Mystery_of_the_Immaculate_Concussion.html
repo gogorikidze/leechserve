@@ -1,0 +1,13 @@
+<html>
+<body>
+<script src="../leechserve.js"></script>
+<script>
+let leech = new Leech({visible: false, threads: false, visibleUI: true});
+console.time("total:");
+
+let url = 'https://live.staticflickr.com/65535/51154130644_6044b26fd4_o_d.png';
+
+leech.loadFromUrl(url);
+</script>
+</body>
+</html>
