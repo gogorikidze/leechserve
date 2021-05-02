@@ -2,9 +2,20 @@ class Leech{
   canvas;ctx;body;
   threads = null;
   workers = [];
+  state = 'Loading source binary...';
+  display = null;
   constructor(args){ //args {visible: Bool, canvasID: String}
     this.test();
     this.body = document.getElementsByTagName("body")[0];
+
+    if(args != undefined && args.visibleUI){ // if visible == true
+      let id = "reservedDiv"+Math.floor(Math.random() * 10000); // to make sure it wont create any conflicts
+      this.display = document.createElement('div');
+      this.display.id = id;
+      this.body.appendChild(this.display);
+      this.display = document.getElementById(this.display.id);
+      this.updateHTML()
+    }
 
     if(args != undefined && args.canvasID){ //if canvas id is not specified, create one and append to document body
       this.canvas = document.getElementById(canvasID);
@@ -148,13 +159,20 @@ class Leech{
     img.crossOrigin = "Anonymous";
     img.src = url;
     img.onload = function() {
+      if(parent.display != null){
+        parent.state = 'Decoding the source...';
+        parent.updateHTML()
+      }
       parent.canvas.width = this.width;
       parent.canvas.height = this.width;
 
       parent.ctx.drawImage(img, 0, 0);
-      leech.decodeImage(function(e){
-        parent.body.innerHTML = e;
-			});
+      /*setTimeout(()=>{
+        leech.decodeImage(function(e){
+          parent.body.innerHTML = e;
+  			});
+      },1);
+      */
     }
   }
   saveAsImage(filename){//saves the encoded image
@@ -201,5 +219,25 @@ class Leech{
     for (var i = 0; i < this.threads; i++) {
       this.workers[i].terminate();
     }
+  }
+  updateHTML(){
+    let html = `<div style="
+    height: 10%;
+    width: 20%;
+    background-color: #393e46;
+    position: absolute; top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    border-radius: 30px;
+    padding: 10 10 10 10;
+    text-align: center;
+    color: #eeeeee;
+    ">
+      <p style="color:#00adb5">leechServe 1.0</p>
+      <style>
+      </style>
+      <p>${this.state}</p>
+    </div>`
+    this.display.innerHTML = html;
   }
 }
